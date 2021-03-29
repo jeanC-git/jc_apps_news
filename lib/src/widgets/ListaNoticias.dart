@@ -98,6 +98,7 @@ class _TarjetaImagen extends StatelessWidget {
             child: (noticia.urlToImage != null)
                 ? FadeInImage(
                     placeholder: AssetImage('assets/img/giphy.gif'),
+                    // placeholder: AssetImage('assets/img/loader.gif'),
                     image: NetworkImage(noticia.urlToImage),
                   )
                 : Image(image: AssetImage('assets/img/no-image.png'))),
