@@ -4,8 +4,8 @@ import 'package:jc_app_news/src/models/CategoriaModel.dart';
 import 'package:jc_app_news/src/models/NewsModel.dart';
 import 'package:http/http.dart' as http;
 
-final _URL_NEWS = 'https://newsapi.org/v2';
-final _API_KEY = '9783a05966e34df0a985f5ac84b470a2';
+final _urlNews = 'https://newsapi.org/v2';
+final _apiKey = '9783a05966e34df0a985f5ac84b470a2';
 
 class NewsService with ChangeNotifier {
   List<Article> headlines = [];
@@ -22,12 +22,12 @@ class NewsService with ChangeNotifier {
     Categoria(FontAwesomeIcons.memory, 'technology'),
   ];
 
-  Map<String, List<Article>> articulos_x_categoria = {};
+  Map<String, List<Article>> articulosPorCategoria = {};
 
   NewsService() {
     this.getTopHeadlines();
     categorias.forEach((element) {
-      this.articulos_x_categoria[element.name] = [];
+      this.articulosPorCategoria[element.name] = [];
     });
     this.getArticulosxCategoria(this._categoriaSeleccionada);
   }
@@ -43,10 +43,10 @@ class NewsService with ChangeNotifier {
   bool get isLoading => this._isLoading;
 
   List<Article> get getArticulosxCategoriaSeleccionada =>
-      this.articulos_x_categoria[this.categoriaSeleccionada];
+      this.articulosPorCategoria[this.categoriaSeleccionada];
 
   getTopHeadlines() async {
-    final url = '$_URL_NEWS/top-headlines?apiKey=$_API_KEY&country=us';
+    final url = '$_urlNews/top-headlines?apiKey=$_apiKey&country=us';
     final resp = await http.get(Uri.parse(url));
     final newsResponse = newsResponseFromJson(resp.body);
 
@@ -55,18 +55,18 @@ class NewsService with ChangeNotifier {
   }
 
   getArticulosxCategoria(String categoria) async {
-    if (this.articulos_x_categoria[categoria].length > 0) {
+    if (this.articulosPorCategoria[categoria].length > 0) {
       this._isLoading = false;
       notifyListeners();
-      return this.articulos_x_categoria[categoria];
+      return this.articulosPorCategoria[categoria];
     }
 
     final url =
-        '$_URL_NEWS/top-headlines?apiKey=$_API_KEY&country=us&category=${categoria}';
+        '$_urlNews/top-headlines?apiKey=$_apiKey&country=us&category=$categoria';
     final resp = await http.get(Uri.parse(url));
     final newsResponse = newsResponseFromJson(resp.body);
 
-    this.articulos_x_categoria[categoria].addAll(newsResponse.articles);
+    this.articulosPorCategoria[categoria].addAll(newsResponse.articles);
     this._isLoading = false;
     notifyListeners();
   }
